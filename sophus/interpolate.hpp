@@ -18,16 +18,17 @@ namespace Sophus {
 // think of the input arguments as being ``bar_T_foo``, ``baz_T_foo`` and the
 // return value being ``quiz_T_foo``.)
 //
-// Precondition: ``alpha`` must be in [0, 1].
+// Precondition: ``p`` must be in [0, 1].
 //
 template <class G, class Scalar2>
 std::enable_if_t<interp_details::Traits<G>::supported, G> interpolate(
-    G const& foo_T_bar, G const& foo_T_baz, Scalar2 alpha = Scalar2(0.5f)) {
+    G const& foo_T_bar, G const& foo_T_baz, Scalar2 p = Scalar2(0.5f)) {
   using Scalar = typename G::Scalar;
-  SOPHUS_ENSURE(alpha >= Scalar2(0) && alpha <= Scalar2(1),
-                "alpha (%) must in [0, 1].");
+  Scalar inter_p(p);
+  SOPHUS_ENSURE(inter_p >= Scalar(0) && inter_p <= Scalar(1),
+                "p (%) must in [0, 1].");
   return foo_T_bar *
-         G::exp(Scalar(alpha) * (foo_T_bar.inverse() * foo_T_baz).log());
+         G::exp(inter_p * (foo_T_bar.inverse() * foo_T_baz).log());
 }
 
 }  // namespace Sophus
